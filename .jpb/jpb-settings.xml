@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaPluginProjectSettings">
+    <option name="constantsOnColumnName" value="false" />
+    <option name="constantsOnEntityName" value="false" />
+    <option name="constantsOnTableName" value="false" />
+    <option name="scaffoldingLanguage" />
+  </component>
+</project>
