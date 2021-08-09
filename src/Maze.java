@@ -5,8 +5,8 @@ import java.util.Random;
 
 public class Maze { // class to generate a maze
 
-    private static final int SIZE = 25; // size of matrix
-    private static final int[][] FIELD = new int[SIZE][SIZE]; // matrix
+    public final int size = 40; // size of matrix
+    public final int[][] field = new int[size][size]; // matrix
 
     private final List<Point> path = new ArrayList<>(); // path to solve
     private final Random random = new Random();
@@ -14,30 +14,32 @@ public class Maze { // class to generate a maze
     private final int[] values = new int[] {0, 1}; // possible values to cell
 
     public Maze() {
-        for (int i = 0; i < FIELD.length; i++) // lines
-            for (int j = 0; j < FIELD.length; j++) { // columns
+        for (int i = 0; i < field.length; i++) // lines
+            for (int j = 0; j < field.length; j++) { // columns
                 int value = random.nextInt(values.length);
-                FIELD[i][j] = values[value];
+                field[i][j] = values[value];
             }
+        this.format();
+        this.solve();
     } // constructor class
 
     public void format() {
-        for (int i = 0; i < FIELD.length; i++) // lines
-            for (int j = 0; j < FIELD[0].length; j++) // columns
+        for (int i = 0; i < field.length; i++) // lines
+            for (int j = 0; j < field[0].length; j++) // columns
                 if (
                         i == 0
-                        || i == SIZE - 1
-                        || j == 0
-                        || j == SIZE - 1
-                ) FIELD[i][j] = 1; // if cell is border
+                     || i == size - 1
+                     || j == 0
+                     || j == size - 1
+                ) field[i][j] = 1; // if cell is border
 
-        FIELD[1][1] = 0; // initial cell
-        FIELD[SIZE-2][SIZE-2] = 0; // final cell
+        field[1][1] = 0; // initial cell
+        field[size -2][size -2] = 0; // final cell
     } // format maze method
 
     public void solve() {
         Point actual = new Point(1,1);
-        Point finall = new Point(SIZE-2, SIZE-2);
+        Point finall = new Point(size -2, size -2);
 
         path.add(actual);
 
@@ -51,10 +53,10 @@ public class Maze { // class to generate a maze
 
             List<Point> candidates = new ArrayList<>();
 
-            if (FIELD[left.x][left.y] == FIELD[actual.x][actual.y]) candidates.add(left);
-            if (FIELD[north.x][north.y] == FIELD[actual.x][actual.y]) candidates.add(north);
-            if (FIELD[rigth.x][rigth.y] == FIELD[actual.x][actual.y]) candidates.add(rigth);
-            if (FIELD[south.x][south.y] == FIELD[actual.x][actual.y]) candidates.add(south);
+            if (field[left.x][left.y] == field[actual.x][actual.y]) candidates.add(left);
+            if (field[north.x][north.y] == field[actual.x][actual.y]) candidates.add(north);
+            if (field[rigth.x][rigth.y] == field[actual.x][actual.y]) candidates.add(rigth);
+            if (field[south.x][south.y] == field[actual.x][actual.y]) candidates.add(south);
 
             candidates.removeIf(path::contains);
 
@@ -74,15 +76,15 @@ public class Maze { // class to generate a maze
 
                 candidates.removeIf(point -> (
                         point.x == 0
-                        || point.x == SIZE - 1
-                        || point.y == 0
-                        || point.y == SIZE - 1
+                     || point.x == size - 1
+                     || point.y == 0
+                     || point.y == size - 1
                 ));
 
                 int random = this.random.nextInt(candidates.size());
                 actual = candidates.get(random);
                 path.add(actual);
-                FIELD[actual.x][actual.y] = 0;
+                field[actual.x][actual.y] = 0;
             }
         }
     } // solve method
@@ -95,17 +97,13 @@ public class Maze { // class to generate a maze
 
     public void showMaze() {
         System.out.println();
-        for (int i = 0; i < FIELD.length; i++) {
-            for (int j = 0; j < FIELD[0].length; j++) System.out.print(FIELD[i][j] + " ");
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[0].length; j++) System.out.print(field[i][j] + " ");
             System.out.println();
         }
     } // showMaze method
 
     public static void main(String[] args) {
         Maze maze = new Maze();
-        maze.format();
-        maze.solve();
-        maze.showMaze();
-        maze.showPath();
     } // main method
 }
