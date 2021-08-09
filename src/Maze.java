@@ -32,6 +32,13 @@ public class Maze { // class to generate a maze
                      || j == 0
                      || j == size - 1
                 ) field[i][j] = 1; // if cell is border
+                else if (
+                        field[i-1][j] == 1
+                     && field[i][j+1] == 1
+                     && field[i+1][j] == 1
+                     && field[i][j-1] == 1
+                     && field[i][j] == 0
+                ) field[i][j] = 1; // if cell is alone
 
         field[1][1] = 0; // initial cell
         field[size -2][size -2] = 0; // final cell

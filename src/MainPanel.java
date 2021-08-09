@@ -9,7 +9,6 @@ public class MainPanel extends JPanel {
 
     public MainPanel() {
         this.setPreferredSize(new Dimension(SIZE,SIZE));
-        maze.showMaze();
     }
 
     @Override
