@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Maze {
+public class Maze { // comentário
 
     private final int SIZE = 25;
     private final int[][] field = new int[SIZE][SIZE];
