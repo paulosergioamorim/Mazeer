@@ -5,8 +5,8 @@ import java.util.Random;
 
 public class Maze { // class to generate a maze
 
-    public final int size = 40; // size of matrix
-    public final int[][] field = new int[size][size]; // matrix
+    public static final int SIZE = 40; // size of matrix
+    public final int[][] field = new int[SIZE][SIZE]; // matrix
 
     private final List<Point> path = new ArrayList<>(); // path to solve
     private final Random random = new Random();
@@ -28,9 +28,9 @@ public class Maze { // class to generate a maze
             for (int j = 0; j < field[0].length; j++) // columns
                 if (
                         i == 0
-                     || i == size - 1
+                     || i == SIZE - 1
                      || j == 0
-                     || j == size - 1
+                     || j == SIZE - 1
                 ) field[i][j] = 1; // if cell is border
                 else if (
                         field[i-1][j] == 1
@@ -41,12 +41,12 @@ public class Maze { // class to generate a maze
                 ) field[i][j] = 1; // if cell is alone
 
         field[1][1] = 0; // initial cell
-        field[size -2][size -2] = 0; // final cell
+        field[SIZE -2][SIZE -2] = 0; // final cell
     } // format maze method
 
     public void solve() {
         Point actual = new Point(1,1);
-        Point finall = new Point(size -2, size -2);
+        Point finall = new Point(SIZE -2, SIZE -2);
 
         path.add(actual);
 
@@ -69,11 +69,7 @@ public class Maze { // class to generate a maze
 
             Point actuall = actual;
 
-            if (!candidates.isEmpty()) {
-                int random = this.random.nextInt(candidates.size());
-                actual = candidates.get(random);
-                path.add(actual);
-            } else {
+            if (candidates.isEmpty()) {
                 candidates.add(north);
                 candidates.add(left);
                 candidates.add(south);
@@ -83,15 +79,19 @@ public class Maze { // class to generate a maze
 
                 candidates.removeIf(point -> (
                         point.x == 0
-                     || point.x == size - 1
+                     || point.x == SIZE - 1
                      || point.y == 0
-                     || point.y == size - 1
+                     || point.y == SIZE - 1
                 ));
 
                 int random = this.random.nextInt(candidates.size());
                 actual = candidates.get(random);
                 path.add(actual);
                 field[actual.x][actual.y] = 0;
+            } else {
+                int random = this.random.nextInt(candidates.size());
+                actual = candidates.get(random);
+                path.add(actual);
             }
         }
     } // solve method

@@ -21,8 +21,8 @@ public class MainPanel extends JPanel {
         for (int i = 0; i < maze.field[0].length; i++) {
             for (int j = 0; j < maze.field.length ; j++) {
                 if (
-                        i == maze.size - 2
-                     && j == maze.size - 2
+                        i == Maze.SIZE - 2
+                     && j == Maze.SIZE - 2
                 ) g.setColor(new Color(0x5096FF));
                 else if (maze.field[i][j] == 0) g.setColor(Color.white);
                 else g.setColor(Color.black);
