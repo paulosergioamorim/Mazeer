@@ -77,6 +77,26 @@ public class Mesh {
             Point rigth = new Point(init.x, init.y+1);
             Point left = new Point(init.x, init.y-1);
 
+            candidates.add(north);
+            candidates.add(south);
+            candidates.add(rigth);
+            candidates.add(left);
+
+            System.out.println(candidates);
+
+            for (Point ignored : candidates) {
+                candidates.removeIf(point -> (
+                                   point.x == 0
+                                || point.x == size - 1
+                                || point.y == 0
+                                || point.y == size - 1
+                ));
+                System.out.println(candidates);
+
+            }
+
+
+            /*
             if (field[north.x][north.y] == null) candidates.add(north);
             if (field[south.x][south.y] == null) candidates.add(south);
             if (field[rigth.x][rigth.y] == null) candidates.add(rigth);
@@ -88,7 +108,7 @@ public class Mesh {
                             || point.y == 0
                             || point.y == size - 1
             ));
-
+            */
 
             if (candidates.isEmpty()) {
                 return 1 / (init.distance(end) + 1);
