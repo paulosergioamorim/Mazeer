@@ -13,6 +13,8 @@ public class Mesh {
     public Mesh(int size) {
         this.size = size;
         field = new int[size][size];
+
+        this.setBounds();
     }
 
     public void setBounds() {
@@ -28,12 +30,12 @@ public class Mesh {
         }
     }
 
-    public List<Point> findPath() {
+    public void findPath() {
         Point actual = new Point(1,1);
         Point end = new Point(size-2,size-2);
 
         while (true) {
-            if (actual.equals(end)) return path;
+            if (actual.equals(end)) return;
 
             Random random = new Random();
             List<Point> candidates = new ArrayList<>();
@@ -50,18 +52,36 @@ public class Mesh {
 
             candidates.removeIf(path::contains);
 
-            int result = random.nextInt(candidates.size());
-            actual = candidates.get(result);
-            path.add(actual);
+            if (candidates.isEmpty()) {
+                return;
+            } else {
+                int result = random.nextInt(candidates.size());
+                actual = candidates.get(result);
+                field[actual.x][actual.y] = 2;
+                path.add(actual);
+            }
         }
     }
 
+    public String pathToString() {
+        String string = "";
+        for (Point point: path) string += String.format("(%d,%d) ",point.x,point.y);
+        return  string;
+    }
+
     public String fieldToString() {
-        String string = null;
+        String string = "";
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++)
                 string += field[i][j] + " ";
             string += "\n";
         } return string;
+    }
+
+    public static void main(String[] args) {
+        Mesh mesh = new Mesh(10);
+        mesh.findPath();
+        System.out.println(mesh.fieldToString());
+        System.out.println(mesh.pathToString());
     }
 }
