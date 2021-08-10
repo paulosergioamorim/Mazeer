@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Mesh {
     public int[][] field;
@@ -34,10 +35,24 @@ public class Mesh {
         while (true) {
             if (actual.equals(end)) return path;
 
+            Random random = new Random();
+            List<Point> candidates = new ArrayList<>();
+
             Point north = new Point(actual.x,actual.y+1);
             Point south = new Point(actual.x,actual.y-1);
             Point rigth = new Point(actual.x+1, actual.y);
             Point left = new Point(actual.x-1, actual.y);
+
+            if (field[north.x][north.y] != 1) candidates.add(north);
+            if (field[south.x][south.y] != 1) candidates.add(south);
+            if (field[rigth.x][rigth.y] != 1) candidates.add(rigth);
+            if (field[left.x][left.y] != 1) candidates.add(left);
+
+            candidates.removeIf(path::contains);
+
+            int result = random.nextInt(candidates.size());
+            actual = candidates.get(result);
+            path.add(actual);
         }
     }
 
