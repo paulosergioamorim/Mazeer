@@ -28,19 +28,40 @@ public class Mesh {
                 ) field[i][j] = 1;
             }
         }
+        field[1][1] = 0;
+    }
+
+    private final Point actual = new Point(1,1);
+    private Point end;
+    private Point north;
+    private Point south;
+    private Point rigth;
+    private Point left;
+
+    private void setExternalPoints(Point actual) {
+        north = new Point(actual.x+1, actual.y);
+        south = new Point(actual.x-1, actual.y);
+        rigth = new Point(actual.x, actual.y+1);
+        left = new Point(actual.x, actual.y-1);
     }
 
     public void findPath() {
-        Point actual = new Point(1,1);
-        Point end = new Point(size-2,size-2);
+        end = new Point(size-1,size-1);
+        Point intemediate = new Point(20,7);
+        conect(actual,intemediate);
+        conect(intemediate,end);
+    }
 
+    public void conect(Point actual, Point end) {
         while (true) {
             if (actual.equals(end)) return;
 
-            double north = disperse(new Point(actual.x+1,actual.y));
-            double south = disperse(new Point(actual.x-1,actual.y));
-            double rigth = disperse(new Point(actual.x,actual.y+1));
-            double left = disperse(new Point(actual.x,actual.y-1));
+            setExternalPoints(actual);
+
+            double north = disperse(new Point(actual.x+1,actual.y), end);
+            double south = disperse(new Point(actual.x-1,actual.y), end);
+            double rigth = disperse(new Point(actual.x,actual.y+1), end);
+            double left = disperse(new Point(actual.x,actual.y-1), end);
 
             double max = Double.max(Double.max(north, south), Double.max(rigth, left));
 
@@ -55,46 +76,34 @@ public class Mesh {
             }
             else if (max == left) {
                 actual = new Point(actual.x,actual.y-1);
-            } path.add(actual);
-
+            }
+            path.add(actual);
+            field[actual.x][actual.y] = 0;
         }
     }
 
-    public double disperse(Point init) {
-        Point end = new Point(size-2,size-2);
-
-        for (int i = 0; i < 10 ; i++) {
+    public double disperse(Point init, Point end) {
+        for (int i = 0; i < 7 ; i++) {
             if (init.equals(end)) {
-                System.out.println("End");
                 return 1 / (init.distance(end) + 1);
             }
 
             Random random = new Random();
             List<Point> candidates = new ArrayList<>();
 
-            Point north = new Point(init.x+1,init.y);
-            Point south = new Point(init.x-1,init.y);
-            Point rigth = new Point(init.x, init.y+1);
-            Point left = new Point(init.x, init.y-1);
+            setExternalPoints(init);
 
             candidates.add(north);
             candidates.add(south);
             candidates.add(rigth);
             candidates.add(left);
 
-            System.out.println(candidates);
-
-            for (Point ignored : candidates) {
-                candidates.removeIf(point -> (
-                                   point.x == 0
-                                || point.x == size - 1
-                                || point.y == 0
-                                || point.y == size - 1
-                ));
-                System.out.println(candidates);
-
-            }
-
+            candidates.removeIf(point -> (
+                    point.x == 0
+                 || point.y == 0
+                 || point.x == size - 1
+                 || point.y == size - 1
+            ));
 
             /*
             if (field[north.x][north.y] == null) candidates.add(north);
@@ -130,15 +139,16 @@ public class Mesh {
         String string = "";
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++)
-                string += field[i][j] + " ";
+                if (field[i][j] == null) {
+                    string += " " + " ";
+                } else string += field[i][j] + " ";
             string += "\n";
         } return string;
     }
 
     public static void main(String[] args) {
-        Mesh mesh = new Mesh(10);
+        Mesh mesh = new Mesh(30);
         mesh.findPath();
         System.out.println(mesh.fieldToString());
-        System.out.println(mesh.pathToString());
     }
 }
