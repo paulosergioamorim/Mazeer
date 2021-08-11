@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Clone {
-    public final List<Point> path = new ArrayList<>();
+
+    public final List<Point> parcial = new ArrayList<>();
 
     public double getHeuristic(Point A, Point B) {
-        int energy = 15;
+        int energy = 10;
 
         while (!A.equals(B) && energy != 0) {
             Point north = new Point(A.x-1, A.y);
@@ -34,9 +35,9 @@ public class Clone {
             else {
                 int result = random.nextInt(candidates.size());
                 A = candidates.get(result);
-                path.add(A);
+                parcial.add(A);
             } energy--;
         }
-        return Math.pow(A.distance(B),2) / ((energy + 1) * A.distance(new Point(Mesh.SIZE/2,Mesh.SIZE/2)));
+        return A.distance(B) / (energy + 1);
     }
 }
