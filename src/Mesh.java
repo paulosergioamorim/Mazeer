@@ -4,39 +4,42 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Mesh {
+    public static final int SIZE = 40;
+
     public final Integer[][] field;
 
-    public static final int SIZE = 40;
+    public final List<Point> points = new ArrayList<>();
     public final List<Point> path = new ArrayList<>();
 
     public Mesh() {
         field = new Integer[SIZE][SIZE];
 
-        this.setBounds();
+        for (int x = 0; x < SIZE; x++)
+            for (int y = 0; y < SIZE; y++)
+                points.add(new Point(x,y));
+
         this.findPath(new Point(1,1), new Point(SIZE-2,SIZE-2));
-        this.formatNull();
+        this.formatMesh();
     }
 
-    private void formatNull() {
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < field[0].length; j++) {
-                if (field[i][j] == null) field[i][j] = 1;
-            }
-        }
+    private void formatMesh() {
+        points.forEach(point -> {
+            if (isBound(point))
+                field[point.x][point.y] = 1;
+        });
+        points.forEach(point -> {
+            if (!path.contains(point))
+                field[point.x][point.y] = 1;
+        });
+        path.forEach(point -> field[point.x][point.y] = 0);
     }
 
-    public void setBounds() {
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < field[0].length; j++) {
-                if (
-                        i == 0
-                     || i == SIZE - 1
-                     || j == 0
-                     || j == SIZE -1
-                ) field[i][j] = 1;
-            }
-        }
-        field[1][1] = 0;
+    private boolean isBound(Point point) {
+        assert points.contains(point);
+        return point.x == 0
+            || point.x == SIZE - 1
+            || point.y == 0
+            || point.y == SIZE - 1;
     }
 
     public void findPath(Point A, Point B) {
@@ -60,7 +63,6 @@ public class Mesh {
 
             A = best_Clone.path.get(0);
             path.add(A);
-            field[A.x][A.y] = 0;
         }
     }
 
