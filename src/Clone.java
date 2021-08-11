@@ -25,9 +25,9 @@ public class Clone {
 
             candidates.removeIf(point -> (
                     point.x == 0
-                            || point.y == 0
-                            || point.x == Mesh.SIZE - 1
-                            || point.y == Mesh.SIZE - 1
+                 || point.y == 0
+                 || point.x == Mesh.SIZE - 1
+                 || point.y == Mesh.SIZE - 1
             ));
 
             if (candidates.isEmpty()) break;
