@@ -44,7 +44,7 @@ public class Mesh {
             List<Double> values = new ArrayList<>();
             HashMap<Double, Clone> map = new HashMap<>();
 
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 10; i++) {
                 Clone clone = new Clone();
                 double heuristic = clone.getHeuristic(A,B);
                 map.put(heuristic,clone);
