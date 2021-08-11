@@ -6,24 +6,17 @@ import java.util.Random;
 public class Clone {
     public final List<Point> path = new ArrayList<>();
 
-    public Clone() {
-    }
-
     public double getHeuristic(Point A, Point B) {
-        int energy = 100;
+        int energy = 15;
 
-        while (true) {
-            if (A.equals(B)) return A.distance(B);
-
-            if (energy == 0) return A.distance(B);
-
-            Random random = new Random();
-            List<Point> candidates = new ArrayList<>();
-
+        while (!A.equals(B) && energy != 0) {
             Point north = new Point(A.x-1, A.y);
             Point south = new Point(A.x+1, A.y);
             Point rigth = new Point(A.x, A.y-1);
             Point left = new Point(A.x, A.y+1);
+
+            Random random = new Random();
+            List<Point> candidates = new ArrayList<>();
 
             candidates.add(north);
             candidates.add(south);
@@ -37,15 +30,13 @@ public class Clone {
                             || point.y == Mesh.SIZE - 1
             ));
 
-            if (candidates.isEmpty()) {
-                path.add(A);
-                return A.distance(B);
-            } else {
+            if (candidates.isEmpty()) break;
+            else {
                 int result = random.nextInt(candidates.size());
                 A = candidates.get(result);
                 path.add(A);
-            }
-            energy--;
+            } energy--;
         }
+        return A.distance(B) / (energy + 1);
     }
 }

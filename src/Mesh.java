@@ -1,11 +1,12 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Mesh {
     private final Integer[][] field;
 
-    public static final int SIZE = 50;
+    public static final int SIZE = 30;
     public final List<Point> path = new ArrayList<>();
 
     public Mesh() {
@@ -28,66 +29,37 @@ public class Mesh {
         field[1][1] = 0;
     }
 
-    public void findPath() {
-        Point A = new Point(1,1);
-        Point B = new Point(SIZE-1,SIZE-1);
-        for (int i = 0; i < 3; i++) {
-            Clone clone1 = new Clone();
-            Clone clone2 = new Clone();
-            Clone clone3 = new Clone();
-            Clone clone4 = new Clone();
-            Clone clone5 = new Clone();
-
+    public void findPath(Point A, Point B) {
+        while (!A.equals(B)) {
             List<Double> values = new ArrayList<>();
+            HashMap<Double, Clone> map = new HashMap<>();
 
-            double heuristic1 = clone1.getHeuristic(A,B);
-            double heuristic2 = clone2.getHeuristic(A,B);
-            double heuristic3 = clone2.getHeuristic(A,B);
-            double heuristic4 = clone2.getHeuristic(A,B);
-            double heuristic5 = clone2.getHeuristic(A,B);
+            for (int i = 0; i < 1000; i++) {
+                Clone clone = new Clone();
+                double heuristic = clone.getHeuristic(A,B);
+                map.put(heuristic,clone);
+            }
 
-            values.add(heuristic1);
-            values.add(heuristic2);
-            values.add(heuristic3);
-            values.add(heuristic4);
-            values.add(heuristic5);
+            map.forEach((value, clone) -> values.add(value));
 
-            values.sort((o1, o2) -> (int) (o2 - o1));
+            values.sort(Double::compare); // from smallest to largest
 
-            double best = values.get(values.size()-1);
+            double best_Heuristic = values.get(0);
 
-            if (best == heuristic1) {
-                A = clone1.path.get(0);
-                this.path.add(A);
-                field[A.x][A.y] = 0;
-            }
-            else if (best == heuristic2) {
-                A = clone2.path.get(0);
-                this.path.add(A);
-                field[A.x][A.y] = 0;
-            }
-            else if (best == heuristic3) {
-                A = clone3.path.get(0);
-                this.path.add(A);
-                field[A.x][A.y] = 0;
-            }
-            else if (best == heuristic4) {
-                A = clone4.path.get(0);
-                this.path.add(A);
-                field[A.x][A.y] = 0;
-            }
-            else if (best == heuristic5) {
-                A = clone5.path.get(0);
-                this.path.add(A);
-                field[A.x][A.y] = 0;
-            }
+            Clone best_Clone = map.get(best_Heuristic);
+
+            A = best_Clone.path.get(0);
+            path.add(A);
+            field[A.x][A.y] = 0;
         }
     }
 
     public String pathToString() {
-        String string = "";
-        for (Point point: path) string += String.format("(%d,%d) ",point.x,point.y);
-        return  string;
+        var ref = new Object() {
+            String string = "";
+        };
+        path.forEach(point -> ref.string += String.format("(%d,%d) ",point.x,point.y));
+        return ref.string;
     }
 
     public String fieldToString() {
@@ -103,7 +75,7 @@ public class Mesh {
 
     public static void main(String[] args) {
         Mesh mesh = new Mesh();
-        mesh.findPath();
+        mesh.findPath(new Point(1,1), new Point(SIZE-2,SIZE-2));
         System.out.println(mesh.fieldToString());
     }
 }
