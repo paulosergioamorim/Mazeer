@@ -54,14 +54,6 @@ public class Mesh {
         }
     }
 
-    public String pathToString() {
-        var ref = new Object() {
-            String string = "";
-        };
-        path.forEach(point -> ref.string += String.format("(%d,%d) ",point.x,point.y));
-        return ref.string;
-    }
-
     public String fieldToString() {
         String string = "";
         for (int i = 0; i < field.length; i++) {
