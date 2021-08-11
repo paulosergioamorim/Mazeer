@@ -7,8 +7,6 @@ public class MeshPanel extends JPanel {
 
     private final Mesh mesh;
 
-    private final Timer timer;
-
     private final Player player;
 
     public MeshPanel() {
@@ -22,7 +20,6 @@ public class MeshPanel extends JPanel {
 
         addKeyListener(new KeyBoard());
 
-        timer = new Timer(5,null);
     }
 
     @Override
