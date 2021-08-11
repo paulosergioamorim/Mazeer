@@ -4,15 +4,25 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Mesh {
-    private final Integer[][] field;
+    public final Integer[][] field;
 
-    public static final int SIZE = 30;
+    public static final int SIZE = 40;
     public final List<Point> path = new ArrayList<>();
 
     public Mesh() {
         field = new Integer[SIZE][SIZE];
 
         this.setBounds();
+        this.findPath(new Point(1,1), new Point(SIZE-2,SIZE-2));
+        this.formatNull();
+    }
+
+    private void formatNull() {
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[0].length; j++) {
+                if (field[i][j] == null) field[i][j] = 1;
+            }
+        }
     }
 
     public void setBounds() {
@@ -63,11 +73,5 @@ public class Mesh {
                 } else string += field[i][j] + " ";
             string += "\n";
         } return string;
-    }
-
-    public static void main(String[] args) {
-        Mesh mesh = new Mesh();
-        mesh.findPath(new Point(1,1), new Point(SIZE-2,SIZE-2));
-        System.out.println(mesh.fieldToString());
     }
 }

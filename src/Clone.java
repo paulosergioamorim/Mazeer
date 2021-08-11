@@ -37,6 +37,6 @@ public class Clone {
                 path.add(A);
             } energy--;
         }
-        return A.distance(B) / (energy + 1);
+        return Math.pow(A.distance(B),2) / ((energy + 1) * A.distance(new Point(Mesh.SIZE/2,Mesh.SIZE/2)));
     }
 }
