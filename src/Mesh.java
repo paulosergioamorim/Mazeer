@@ -1,18 +1,15 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Mesh {
-    public Integer[][] field;
-    public final int size;
+    private final Integer[][] field;
 
-    public final List<Point> points = new ArrayList<>();
+    public static final int SIZE = 50;
     public final List<Point> path = new ArrayList<>();
 
-    public Mesh(int size) {
-        this.size = size;
-        field = new Integer[size][size];
+    public Mesh() {
+        field = new Integer[SIZE][SIZE];
 
         this.setBounds();
     }
@@ -22,111 +19,69 @@ public class Mesh {
             for (int j = 0; j < field[0].length; j++) {
                 if (
                         i == 0
-                     || i == size - 1
+                     || i == SIZE - 1
                      || j == 0
-                     || j == size -1
+                     || j == SIZE -1
                 ) field[i][j] = 1;
             }
         }
         field[1][1] = 0;
     }
 
-    private final Point actual = new Point(1,1);
-    private Point end;
-    private Point north;
-    private Point south;
-    private Point rigth;
-    private Point left;
-
-    private void setExternalPoints(Point actual) {
-        north = new Point(actual.x+1, actual.y);
-        south = new Point(actual.x-1, actual.y);
-        rigth = new Point(actual.x, actual.y+1);
-        left = new Point(actual.x, actual.y-1);
-    }
-
     public void findPath() {
-        end = new Point(size-1,size-1);
-        Point intemediate = new Point(20,7);
-        conect(actual,intemediate);
-        conect(intemediate,end);
-    }
+        Point A = new Point(1,1);
+        Point B = new Point(SIZE-1,SIZE-1);
+        for (int i = 0; i < 3; i++) {
+            Clone clone1 = new Clone();
+            Clone clone2 = new Clone();
+            Clone clone3 = new Clone();
+            Clone clone4 = new Clone();
+            Clone clone5 = new Clone();
 
-    public void conect(Point actual, Point end) {
-        while (true) {
-            if (actual.equals(end)) return;
+            List<Double> values = new ArrayList<>();
 
-            setExternalPoints(actual);
+            double heuristic1 = clone1.getHeuristic(A,B);
+            double heuristic2 = clone2.getHeuristic(A,B);
+            double heuristic3 = clone2.getHeuristic(A,B);
+            double heuristic4 = clone2.getHeuristic(A,B);
+            double heuristic5 = clone2.getHeuristic(A,B);
 
-            double north = disperse(new Point(actual.x+1,actual.y), end);
-            double south = disperse(new Point(actual.x-1,actual.y), end);
-            double rigth = disperse(new Point(actual.x,actual.y+1), end);
-            double left = disperse(new Point(actual.x,actual.y-1), end);
+            values.add(heuristic1);
+            values.add(heuristic2);
+            values.add(heuristic3);
+            values.add(heuristic4);
+            values.add(heuristic5);
 
-            double max = Double.max(Double.max(north, south), Double.max(rigth, left));
+            values.sort((o1, o2) -> (int) (o2 - o1));
 
-            if (max == north) {
-                actual = new Point(actual.x+1,actual.y);
+            double best = values.get(values.size()-1);
+
+            if (best == heuristic1) {
+                A = clone1.path.get(0);
+                this.path.add(A);
+                field[A.x][A.y] = 0;
             }
-            else if (max == south) {
-                actual = new Point(actual.x-1,actual.y);
+            else if (best == heuristic2) {
+                A = clone2.path.get(0);
+                this.path.add(A);
+                field[A.x][A.y] = 0;
             }
-            else if (max == rigth) {
-                actual = new Point(actual.x,actual.y+1);
+            else if (best == heuristic3) {
+                A = clone3.path.get(0);
+                this.path.add(A);
+                field[A.x][A.y] = 0;
             }
-            else if (max == left) {
-                actual = new Point(actual.x,actual.y-1);
+            else if (best == heuristic4) {
+                A = clone4.path.get(0);
+                this.path.add(A);
+                field[A.x][A.y] = 0;
             }
-            path.add(actual);
-            field[actual.x][actual.y] = 0;
-        }
-    }
-
-    public double disperse(Point init, Point end) {
-        for (int i = 0; i < 7 ; i++) {
-            if (init.equals(end)) {
-                return 1 / (init.distance(end) + 1);
-            }
-
-            Random random = new Random();
-            List<Point> candidates = new ArrayList<>();
-
-            setExternalPoints(init);
-
-            candidates.add(north);
-            candidates.add(south);
-            candidates.add(rigth);
-            candidates.add(left);
-
-            candidates.removeIf(point -> (
-                    point.x == 0
-                 || point.y == 0
-                 || point.x == size - 1
-                 || point.y == size - 1
-            ));
-
-            /*
-            if (field[north.x][north.y] == null) candidates.add(north);
-            if (field[south.x][south.y] == null) candidates.add(south);
-            if (field[rigth.x][rigth.y] == null) candidates.add(rigth);
-            if (field[left.x][left.y] == null) candidates.add(left);
-
-            candidates.removeIf(point -> (
-                    point.x == 0
-                            || point.x == size - 1
-                            || point.y == 0
-                            || point.y == size - 1
-            ));
-            */
-
-            if (candidates.isEmpty()) {
-                return 1 / (init.distance(end) + 1);
-            } else {
-                int result = random.nextInt(candidates.size());
-                init = candidates.get(result);
+            else if (best == heuristic5) {
+                A = clone5.path.get(0);
+                this.path.add(A);
+                field[A.x][A.y] = 0;
             }
         }
-        return 1 / (init.distance(end) + 1);
     }
 
     public String pathToString() {
@@ -147,7 +102,7 @@ public class Mesh {
     }
 
     public static void main(String[] args) {
-        Mesh mesh = new Mesh(30);
+        Mesh mesh = new Mesh();
         mesh.findPath();
         System.out.println(mesh.fieldToString());
     }
