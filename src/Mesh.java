@@ -19,23 +19,23 @@ public class Mesh {
         points = new ArrayList<>();
         path = new ArrayList<>();
 
-        this.map();
+        mapField();
+        findPath(new Point(1,1),new Point(size-2,size-2));
+        formatField();
     }
 
     // private methods
 
-    private void formatMesh() {
+    private void formatField() {
         points.forEach(
-                point -> field[point.x][point.y]
-                        = isBorder(point) ? 1: 0
+                point -> field[point.x][point.y] = isBorder(point) ? 1: 0
         );
         points.forEach(
-                point -> field[point.x][point.y]
-                        = path.contains(point) ? 0: 1
+                point -> field[point.x][point.y] = path.contains(point) ? 0: 1
         );
     }
 
-    private void map() {
+    private void mapField() {
         for (int x = 0; x < field.length; x++)
             for (int y = 0; y < field[0].length; y++) {
                 Point point = new Point(x,y);
@@ -78,8 +78,6 @@ public class Mesh {
 
     public static void main(String[] args) {
         int size = 10;
-        Mesh mesh = new Mesh(size);
-        mesh.findPath(new Point(1,1),new Point(1,2));
-        mesh.path.forEach(System.out::println);
+        new Mesh(size);
     }
 }
