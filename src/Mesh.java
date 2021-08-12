@@ -20,6 +20,8 @@ public class Mesh {
         field = new int[this.size][this.size];
         points = new ArrayList<>();
         path = new ArrayList<>();
+
+        this.map();
     }
 
     // private methods

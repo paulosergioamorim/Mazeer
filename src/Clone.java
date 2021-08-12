@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Clone {
     private final List<Point> path;
-    private final Facing facing = Facing.RIGTH;
+    private Facing facing = Facing.RIGTH;
     private double heuristic;
 
     private final int size;
@@ -42,24 +42,29 @@ public class Clone {
             Point right;
 
             Facing facing = Facing.valueOf(this.facing.value);
+            System.out.println(facing);
 
             switch (facing) {
                 case NORTH -> {
+                    System.out.println("A");
                     front = north;
                     left = west;
                     right = east;
                 }
                 case SOUTH -> {
+                    System.out.println("B");
                     front = south;
                     left = east;
                     right = west;
                 }
                 case LEFT -> {
+                    System.out.println("C");
                     front = west;
                     left = south;
                     right = north;
                 }
                 case RIGTH -> {
+                    System.out.println("D");
                     front = east;
                     left = north;
                     right = south;
@@ -85,9 +90,9 @@ public class Clone {
             A = candidates.get(index);
 
             if (A.equals(north)) facing.setValue(0);
-            else if (A.equals(right)) facing.setValue(1);
-            else if (A.equals(south)) facing.setValue(2);
-            else if (A.equals(left)) facing.setValue(3);
+            if (A.equals(right)) facing.setValue(1);
+            if (A.equals(south)) facing.setValue(2);
+            if (A.equals(left)) facing.setValue(3);
 
             path.add(A);
 
