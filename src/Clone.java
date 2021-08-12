@@ -89,10 +89,10 @@ public class Clone {
 
             A = candidates.get(index);
 
-            if (A.equals(north)) facing.setValue(0);
-            if (A.equals(right)) facing.setValue(1);
-            if (A.equals(south)) facing.setValue(2);
-            if (A.equals(left)) facing.setValue(3);
+            if (A.equals(north)) facing = Facing.NORTH;
+            if (A.equals(right)) facing = Facing.RIGTH;
+            if (A.equals(south)) facing = Facing.SOUTH;
+            if (A.equals(left)) facing = Facing.LEFT;
 
             path.add(A);
 
@@ -111,11 +111,7 @@ public class Clone {
             this.value = value;
         }
 
-        private int value;
-
-        public void setValue(int value) {
-            this.value = value;
-        }
+        private final int value;
 
         private static final HashMap<Integer,Facing> map = new HashMap<>();
 
