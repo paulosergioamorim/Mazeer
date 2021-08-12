@@ -25,12 +25,12 @@ public class Mesh {
 
     private void formatMesh() {
         points.forEach(
-                point -> this.field[point.x][point.y]
-                        = (this.isBorder(point)) ? 1: 0
+                point -> field[point.x][point.y]
+                        = isBorder(point) ? 1: 0
         );
         points.forEach(
                 point -> this.field[point.x][point.y]
-                        = (this.path.contains(point)) ? 0: 1
+                        = path.contains(point) ? 0: 1
         );
     }
 
