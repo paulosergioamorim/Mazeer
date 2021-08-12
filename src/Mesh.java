@@ -1,12 +1,10 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Mesh {
     public int[][] field;
-
-    public final int size;
+    public static int size = 0;
 
     private final List<Point> points;
     private final List<Point> path;
@@ -16,8 +14,8 @@ public class Mesh {
      * @param size is size of mesh
      */
     public Mesh(int size) {
-        this.size = size;
-        field = new int[this.size][this.size];
+        Mesh.size = size;
+        field = new int[Mesh.size][Mesh.size];
         points = new ArrayList<>();
         path = new ArrayList<>();
 
@@ -32,7 +30,7 @@ public class Mesh {
                         = isBorder(point) ? 1: 0
         );
         points.forEach(
-                point -> this.field[point.x][point.y]
+                point -> field[point.x][point.y]
                         = path.contains(point) ? 0: 1
         );
     }
@@ -46,36 +44,14 @@ public class Mesh {
     }
 
     private void findPath(Point A, Point B) {
-        while (A != B) {
-            List<Double> values = new ArrayList<>();
-            HashMap<Double, Clone> map = new HashMap<>();
 
-            for (int i = 0; i < 100; i++) {
-                Clone clone = new Clone(size);
-                clone.setHeuristic(A, B);
-                double heuristic = clone.getHeuristic();
-                map.put(heuristic, clone);
-            }
-
-            map.forEach((value, clone) -> values.add(value));
-
-            values.sort(Double::compare); // from smallest to largest
-
-            double best_Heuristic = values.get(0);
-
-            Clone best_Clone = map.get(best_Heuristic);
-
-            A = best_Clone.getPath().get(0);
-            path.add(A);
-        }
     }
-
     // public methods
     /**
      * @param point input point
      * @return if point is part of border
      */
-    public boolean isBorder(Point point) {
+    public static boolean isBorder(Point point) {
         return (
                 point.x == 0
              || point.x == size - 1
