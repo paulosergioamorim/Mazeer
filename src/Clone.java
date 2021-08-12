@@ -1,16 +1,13 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 public class Clone {
-    private final List<Point> path;
-    private Facing facing = Facing.RIGTH;
     private double heuristic;
 
+    private final List<Point> path;
     private final int size;
-
     private final Random random = new Random();
 
     public List<Point> getPath() {
@@ -28,55 +25,21 @@ public class Clone {
 
     public void setHeuristic(Point A, Point B) {
         int energy = 10;
-        while (!A.equals(B) && energy != 0) {
+        while (A != B && energy != 0) {
             int x = A.x;
             int y = A.y;
 
             Point north = new Point(x-1,y);
             Point south = new Point(x+1,y);
-            Point west = new Point(x,y-1);
-            Point east = new Point(x,y+1);
-
-            Point front;
-            Point left;
-            Point right;
-
-            Facing facing = Facing.valueOf(this.facing.value);
-            System.out.println(facing);
-
-            switch (facing) {
-                case NORTH -> {
-                    System.out.println("A");
-                    front = north;
-                    left = west;
-                    right = east;
-                }
-                case SOUTH -> {
-                    System.out.println("B");
-                    front = south;
-                    left = east;
-                    right = west;
-                }
-                case LEFT -> {
-                    System.out.println("C");
-                    front = west;
-                    left = south;
-                    right = north;
-                }
-                case RIGTH -> {
-                    System.out.println("D");
-                    front = east;
-                    left = north;
-                    right = south;
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + facing);
-            }
+            Point left = new Point(x,y-1);
+            Point rigth = new Point(x,y+1);
 
             List<Point> candidates = new ArrayList<>();
 
-            candidates.add(front);
+            candidates.add(north);
+            candidates.add(south);
             candidates.add(left);
-            candidates.add(right);
+            candidates.add(rigth);
 
             candidates.removeIf(point -> (
                     point.x == 0
@@ -89,41 +52,10 @@ public class Clone {
 
             A = candidates.get(index);
 
-            if (A.equals(north)) facing = Facing.NORTH;
-            if (A.equals(right)) facing = Facing.RIGTH;
-            if (A.equals(south)) facing = Facing.SOUTH;
-            if (A.equals(left)) facing = Facing.LEFT;
-
             path.add(A);
 
             energy--;
         }
         heuristic = A.distance(B);
-    }
-
-    private enum Facing {
-        NORTH(0),
-        RIGTH(1),
-        SOUTH(2),
-        LEFT(3);
-
-        Facing(int value) {
-            this.value = value;
-        }
-
-        private final int value;
-
-        private static final HashMap<Integer,Facing> map = new HashMap<>();
-
-        static {
-            for (Facing facing: values()) {
-                map.put(facing.value,facing);
-            }
-        }
-
-        public static Facing valueOf(int value) {
-            return map.get(value);
-        }
-
     }
 }

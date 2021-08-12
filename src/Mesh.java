@@ -46,11 +46,11 @@ public class Mesh {
     }
 
     private void findPath(Point A, Point B) {
-        while (!A.equals(B)) {
+        while (A != B) {
             List<Double> values = new ArrayList<>();
             HashMap<Double, Clone> map = new HashMap<>();
 
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 100; i++) {
                 Clone clone = new Clone(size);
                 clone.setHeuristic(A, B);
                 double heuristic = clone.getHeuristic();
@@ -103,6 +103,7 @@ public class Mesh {
     public static void main(String[] args) {
         int size = 10;
         Mesh mesh = new Mesh(size);
-        mesh.findPath(new Point(1,1),new Point(size-2,size-2));
+        mesh.findPath(new Point(1,1),new Point(1,2));
+        mesh.path.forEach(System.out::println);
     }
 }
