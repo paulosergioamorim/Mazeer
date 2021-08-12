@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 
 public class Clone {
@@ -21,8 +22,16 @@ public class Clone {
 
         private int value;
 
-        public int getValue() {
-            return value;
+        private static final HashMap<Integer,Facing> map = new HashMap<>();
+
+        static {
+            for (Facing facing: values()) {
+                map.put(facing.value,facing);
+            }
+        }
+
+        public static Facing valueOf(int value) {
+            return map.get(value);
         }
 
         public void rotate(int i) {
