@@ -13,6 +13,10 @@ public class Clone {
 
     private final Random random = new Random();
 
+    public List<Point> getPath() {
+        return path;
+    }
+
     public Clone(int size) {
         this.size = size;
         path = new ArrayList<>();
@@ -89,6 +93,7 @@ public class Clone {
 
             energy--;
         }
+        heuristic = A.distance(B);
     }
 
     private enum Facing {

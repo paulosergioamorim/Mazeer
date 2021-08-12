@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Mesh {
@@ -42,8 +43,32 @@ public class Mesh {
             }
     }
 
-    // public methods
+    private void findPath(Point A, Point B) {
+        while (!A.equals(B)) {
+            List<Double> values = new ArrayList<>();
+            HashMap<Double, Clone> map = new HashMap<>();
 
+            for (int i = 0; i < 2; i++) {
+                Clone clone = new Clone(size);
+                clone.setHeuristic(A, B);
+                double heuristic = clone.getHeuristic();
+                map.put(heuristic, clone);
+            }
+
+            map.forEach((value, clone) -> values.add(value));
+
+            values.sort(Double::compare); // from smallest to largest
+
+            double best_Heuristic = values.get(0);
+
+            Clone best_Clone = map.get(best_Heuristic);
+
+            A = best_Clone.getPath().get(0);
+            path.add(A);
+        }
+    }
+
+    // public methods
     /**
      * @param point input point
      * @return if point is part of border
@@ -71,5 +96,11 @@ public class Mesh {
      */
     public List<Point> getPoints() {
         return points;
+    }
+
+    public static void main(String[] args) {
+        int size = 10;
+        Mesh mesh = new Mesh(size);
+        mesh.findPath(new Point(1,1),new Point(size-2,size-2));
     }
 }
