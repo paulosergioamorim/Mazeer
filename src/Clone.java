@@ -24,12 +24,7 @@ public class Clone {
             candidates.add(rigth);
             candidates.add(left);
 
-            candidates.removeIf(point -> (
-                    point.x == 0
-                 || point.y == 0
-                 || point.x == Mesh.SIZE - 1
-                 || point.y == Mesh.SIZE - 1
-            ));
+            candidates.removeIf(Mesh::isBorder);
 
             if (candidates.isEmpty()) break;
             else {

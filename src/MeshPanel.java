@@ -13,7 +13,7 @@ public class MeshPanel extends JPanel {
         this.setPreferredSize(new Dimension(600,600));
         this.setFocusable(true);
         this.setDoubleBuffered(true);
-        mesh = new Mesh();
+        mesh = new Mesh(30);
 
         Point init = mesh.path.get(0);
         player = new Player(init.x,init.y);

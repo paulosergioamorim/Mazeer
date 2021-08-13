@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Mesh {
-    public static final int SIZE = 30;
+    public static int SIZE = 0;
 
     public final Integer[][] field;
 
@@ -14,10 +14,11 @@ public class Mesh {
 
     private final Random random = new Random();
 
-    public Mesh() {
-        field = new Integer[SIZE][SIZE];
-        for (int x = 0; x < SIZE; x++)
-            for (int y = 0; y < SIZE; y++)
+    public Mesh(int size) {
+        Mesh.SIZE = size;
+        field = new Integer[size][size];
+        for (int x = 0; x < size; x++)
+            for (int y = 0; y < size; y++)
                 points.add(new Point(x,y));
         this.create();
         this.formatMesh();
@@ -35,7 +36,7 @@ public class Mesh {
         path.forEach(point -> field[point.x][point.y] = 0);
     }
 
-    private boolean isBorder(Point point) {
+    public static boolean isBorder(Point point) {
         return point.x == 0
             || point.x == SIZE - 1
             || point.y == 0
@@ -48,7 +49,7 @@ public class Mesh {
 
         List<Point> candidates = new ArrayList<>(points);
         candidates.addAll(points);
-        candidates.removeIf(this::isBorder);
+        candidates.removeIf(Mesh::isBorder);
         candidates.removeIf(point -> point.distance(new Point(SIZE/2,SIZE/2)) < 10);
 
         A = candidates.get(random.nextInt(candidates.size()));
@@ -87,7 +88,8 @@ public class Mesh {
         }
     }
 
-    public String fieldToString() {
+    @Override
+    public String toString() {
         String string = "";
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++)
