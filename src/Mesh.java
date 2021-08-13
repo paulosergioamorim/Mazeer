@@ -12,20 +12,32 @@ public class Mesh {
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
 
+    /**
+     * Create a field, a path and format
+     * @param size size of maze
+     */
     public Mesh(int size) {
         Mesh.size = size;
         field = new Integer[size][size];
-        mapField(size);
-        createField();
-        formatField();
+        this.mapField(size);
+        this.createField();
+        this.formatField();
     }
 
+    /**
+     * Add all points to a list
+     * @param size size of maze
+     */
     private void mapField(int size) {
         for (int x = 0; x < size; x++)
             for (int y = 0; y < size; y++)
                 points.add(new Point(x,y));
     }
 
+    /**
+     * Define a value to each point,
+     * if is in path, your value is 0, else is 1
+     */
     private void formatField() {
         points.forEach(point ->
                 field[point.x][point.y] = (path.contains(point)) ? 0: 1
@@ -33,22 +45,28 @@ public class Mesh {
     }
 
     public void createField() {
-        var obj = new Object() {
+        var ref = new Object() {
             final List<Point> candidates = new ArrayList<>(points);
             final int index = random.nextInt(candidates.size());
             Point A = candidates.get(index);
         };
-
-        obj.candidates.removeIf(Mesh::isBorder);
+        ref.candidates.removeIf(Mesh::isBorder);
+        ref.candidates.removeIf(point -> point.distance(new Point(size/2,size/2)) < 5);
 
         for (int i = 0; i < 10; i++) {
-            int index = random.nextInt(obj.candidates.size());
-            Point B = obj.candidates.get(index);
-            findPath(obj.A,B);
-            obj.A = B;
+            ref.candidates.remove(ref.A);
+            int index = random.nextInt(ref.candidates.size());
+            Point B = ref.candidates.get(index);
+            findPath(ref.A,B);
+            ref.A = B;
         }
     }
 
+    /**
+     * Use Monte Carlo algorithm to find a path
+     * @param A initial point
+     * @param B final point
+     */
     public void findPath(Point A, Point B) {
         while (!A.equals(B)) {
             List<Double> values = new ArrayList<>();
@@ -62,7 +80,7 @@ public class Mesh {
 
             map.forEach((value, clone) -> values.add(value));
 
-            values.sort(Double::compare); // from smallest to largest
+            values.sort(Double::compare); // organize list from smallest to largest
 
             double best_Heuristic = values.get(0);
 
@@ -73,6 +91,11 @@ public class Mesh {
         }
     }
 
+    /**
+     * Verify if border of maze contais point parameter
+     * @param point point to verify
+     * @return if point is border or not
+     */
     public static boolean isBorder(Point point) {
         return point.x == 0
             || point.x == size - 1

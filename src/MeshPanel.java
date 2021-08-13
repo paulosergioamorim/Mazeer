@@ -6,16 +6,17 @@ import java.awt.event.KeyEvent;
 public class MeshPanel extends JPanel {
     private final Mesh mesh;
     private final Player player;
+    private final Timer timer;
 
     public MeshPanel() {
         this.setPreferredSize(new Dimension(600,600));
         this.setFocusable(true);
         this.setDoubleBuffered(true);
+
         mesh = new Mesh(30);
-
-        Point init = mesh.getPath().get(0);
+        var init = mesh.getPath().get(0);
         player = new Player(init.x,init.y);
-
+        timer = new Timer(1,null);
         addKeyListener(new KeyBoard());
     }
 
@@ -37,7 +38,7 @@ public class MeshPanel extends JPanel {
                 if (
                         i == mesh.getPath().get(mesh.getPath().size()-1).x
                      && j == mesh.getPath().get(mesh.getPath().size()-1).y
-                ) g.setColor(Color.GREEN);
+                ) g.setColor(Color.CYAN);
                 else if (mesh.field[i][j] == 0) g.setColor(Color.WHITE);
                 else g.setColor(Color.BLACK);
                 g.fillRect(j*20,i*20,20,20);

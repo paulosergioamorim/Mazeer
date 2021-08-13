@@ -7,6 +7,11 @@ public class Clone {
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
 
+    /**
+     * @param A inital point
+     * @param B final point
+     * @return a double value that equals clone perfomance
+     */
     public double getHeuristic(Point A, Point B) {
         int energy = 10;
         while (A != B && energy != 0) {

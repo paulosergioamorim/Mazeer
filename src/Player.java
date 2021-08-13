@@ -8,12 +8,20 @@ public class Player {
 
     private final Image image;
 
+    /**
+     * Create a player
+     * @param x vertical position
+     * @param y horizontal position
+     */
     public Player(int x, int y) {
         this.x = y * 20 + 2;
         this.y = x * 20 + 2;
         image = new ImageIcon("src/player.png").getImage();
     }
 
+    /**
+     * Update player cordinates
+     */
     public void update() {
         x += dx;
         y += dy;
