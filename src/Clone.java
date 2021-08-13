@@ -9,7 +9,7 @@ public class Clone {
 
     public double getHeuristic(Point A, Point B) {
         int energy = 10;
-        while (!A.equals(B) && energy != 0) {
+        while (A != B && energy != 0) {
             Point north = new Point(A.x-1,A.y);
             Point south = new Point(A.x+1,A.y);
             Point left = new Point(A.x, A.y+1);
