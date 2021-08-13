@@ -23,6 +23,7 @@ public class Mesh {
         mapField();
         findPath(new Point(1,1),new Point(size-2,size-2));
         formatField();
+        System.out.println(fieldToString());
     }
 
     // private methods
@@ -45,12 +46,15 @@ public class Mesh {
     }
 
     private void findPath(Point A, Point B) {
-        while (A != B) {
+        for (int j = 0; j < 100; j++) {
+
+            if (A == B) break;
 
             List<Clone> clones = new ArrayList<>();
 
             for (int i = 0; i < 200; i++) {
                 Clone clone = new Clone(size);
+                clone.setHeuristic(A,B);
                 clones.add(clone);
             }
 
@@ -61,37 +65,45 @@ public class Mesh {
 
             Point finalA = A;
             clones.forEach(clone -> {
-                if (Objects.equals(clone.getFirst(), new Point(finalA.x-1, finalA.y))) clones_up.add(clone);
-                if (Objects.equals(clone.getFirst(), new Point(finalA.x+1, finalA.y))) clones_down.add(clone);
-                if (Objects.equals(clone.getFirst(), new Point(finalA.x, finalA.y-1))) clones_left.add(clone);
-                if (Objects.equals(clone.getFirst(), new Point(finalA.x, finalA.y+1))) clones_rigth.add(clone);
+                if (clone.getFirst().equals(new Point(finalA.x - 1, finalA.y))) {
+                    clones_up.add(clone);
+                }
+                if (clone.getFirst().equals(new Point(finalA.x + 1, finalA.y))) {
+                    clones_down.add(clone);
+                }
+                if (clone.getFirst().equals(new Point(finalA.x, finalA.y - 1))) {
+                    clones_left.add(clone);
+                }
+                if (clone.getFirst().equals(new Point(finalA.x, finalA.y + 1))) {
+                    clones_rigth.add(clone);
+                }
             });
 
             double avarage_up = 0;
             for (Clone clone:
                  clones_up) {
-                avarage_up += clone.getHeuristic(A,B);
+                avarage_up += clone.getHeuristic();
                 avarage_up /= clones_down.size();
             }
 
             double avarage_down = 0;
             for (Clone clone:
                     clones_down) {
-                avarage_down += clone.getHeuristic(A,B);
+                avarage_down += clone.getHeuristic();
                 avarage_down /= clones_down.size();
             }
 
             double avarage_left = 0;
             for (Clone clone:
                     clones_left) {
-                avarage_left += clone.getHeuristic(A,B);
+                avarage_left += clone.getHeuristic();
                 avarage_left /= clones_left.size();
             }
 
             double avarage_rigth = 0;
             for (Clone clone:
                     clones_rigth) {
-                avarage_rigth += clone.getHeuristic(A,B);
+                avarage_rigth += clone.getHeuristic();
                 avarage_rigth /= clones_rigth.size();
             }
 
@@ -104,7 +116,7 @@ public class Mesh {
 
             avarages.sort(Double::compare);
 
-            double best_avarage = avarages.get(0);
+            double best_avarage = avarages.get(avarages.size()-1);
 
             if (best_avarage == avarage_up) A = clones_up.get(0).getFirst();
             if (best_avarage == avarage_down) A = clones_down.get(0).getFirst();
@@ -113,6 +125,17 @@ public class Mesh {
 
             path.add(A);
         }
+    }
+
+    private String fieldToString() {
+        String s = "";
+        for (int x = 0; x < field.length; x++) {
+            for (int y = 0; y < field[0].length; y++) {
+                s += field[x][y] + " ";
+            }
+            s += "\n";
+        }
+        return s;
     }
     // public methods
     /**
