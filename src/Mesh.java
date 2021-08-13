@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Mesh {
     public int[][] field;
@@ -44,7 +45,74 @@ public class Mesh {
     }
 
     private void findPath(Point A, Point B) {
+        while (A != B) {
 
+            List<Clone> clones = new ArrayList<>();
+
+            for (int i = 0; i < 200; i++) {
+                Clone clone = new Clone(size);
+                clones.add(clone);
+            }
+
+            List<Clone> clones_up = new ArrayList<>();
+            List<Clone> clones_down = new ArrayList<>();
+            List<Clone> clones_left = new ArrayList<>();
+            List<Clone> clones_rigth = new ArrayList<>();
+
+            Point finalA = A;
+            clones.forEach(clone -> {
+                if (Objects.equals(clone.getFirst(), new Point(finalA.x-1, finalA.y))) clones_up.add(clone);
+                if (Objects.equals(clone.getFirst(), new Point(finalA.x+1, finalA.y))) clones_down.add(clone);
+                if (Objects.equals(clone.getFirst(), new Point(finalA.x, finalA.y-1))) clones_left.add(clone);
+                if (Objects.equals(clone.getFirst(), new Point(finalA.x, finalA.y+1))) clones_rigth.add(clone);
+            });
+
+            double avarage_up = 0;
+            for (Clone clone:
+                 clones_up) {
+                avarage_up += clone.getHeuristic(A,B);
+                avarage_up /= clones_down.size();
+            }
+
+            double avarage_down = 0;
+            for (Clone clone:
+                    clones_down) {
+                avarage_down += clone.getHeuristic(A,B);
+                avarage_down /= clones_down.size();
+            }
+
+            double avarage_left = 0;
+            for (Clone clone:
+                    clones_left) {
+                avarage_left += clone.getHeuristic(A,B);
+                avarage_left /= clones_left.size();
+            }
+
+            double avarage_rigth = 0;
+            for (Clone clone:
+                    clones_rigth) {
+                avarage_rigth += clone.getHeuristic(A,B);
+                avarage_rigth /= clones_rigth.size();
+            }
+
+            List<Double> avarages = new ArrayList<>();
+
+            avarages.add(avarage_up);
+            avarages.add(avarage_down);
+            avarages.add(avarage_left);
+            avarages.add(avarage_rigth);
+
+            avarages.sort(Double::compare);
+
+            double best_avarage = avarages.get(0);
+
+            if (best_avarage == avarage_up) A = clones_up.get(0).getFirst();
+            if (best_avarage == avarage_down) A = clones_down.get(0).getFirst();
+            if (best_avarage == avarage_left) A = clones_left.get(0).getFirst();
+            if (best_avarage == avarage_rigth) A = clones_rigth.get(0).getFirst();
+
+            path.add(A);
+        }
     }
     // public methods
     /**

@@ -8,8 +8,9 @@ public class Clone {
     private final Random random = new Random();
 
     private final int size;
+    private Point first;
 
-    public List<Point> getPath() {
+    private List<Point> getPath() {
         return path;
     }
 
@@ -24,15 +25,15 @@ public class Clone {
             int x = A.x;
             int y = A.y;
 
-            Point north = new Point(x-1,y);
-            Point south = new Point(x+1,y);
+            Point up = new Point(x-1,y);
+            Point down = new Point(x+1,y);
             Point left = new Point(x,y-1);
             Point rigth = new Point(x,y+1);
 
             List<Point> candidates = new ArrayList<>();
 
-            candidates.add(north);
-            candidates.add(south);
+            candidates.add(up);
+            candidates.add(down);
             candidates.add(left);
             candidates.add(rigth);
 
@@ -41,11 +42,17 @@ public class Clone {
             int index = random.nextInt(candidates.size());
 
             A = candidates.get(index);
-
             path.add(A);
+
+            if (energy == 10)
+                first = A;
 
             energy--;
         }
         return A.distance(B);
+    }
+
+    public Point getFirst() {
+        return first;
     }
 }
