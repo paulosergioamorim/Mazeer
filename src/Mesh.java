@@ -6,61 +6,44 @@ import java.util.Random;
 
 public class Mesh {
     public static int SIZE = 0;
-
     public final Integer[][] field;
 
-    public final List<Point> points = new ArrayList<>();
-    public final List<Point> path = new ArrayList<>();
-
+    private final List<Point> points = new ArrayList<>();
+    private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
 
     public Mesh(int size) {
         Mesh.SIZE = size;
         field = new Integer[size][size];
+        mapField(size);
+        createField();
+        formatField();
+    }
+
+    private void mapField(int size) {
         for (int x = 0; x < size; x++)
             for (int y = 0; y < size; y++)
                 points.add(new Point(x,y));
-        this.create();
-        this.formatMesh();
     }
 
-    private void formatMesh() {
-        points.forEach(point -> {
-            if (isBorder(point))
-                field[point.x][point.y] = 1;
-        });
-        points.forEach(point -> {
-            if (!path.contains(point))
-                field[point.x][point.y] = 1;
-        });
-        path.forEach(point -> field[point.x][point.y] = 0);
+    private void formatField() {
+        points.forEach(point ->
+                field[point.x][point.y] = (path.contains(point)) ? 0: 1
+        );
     }
 
-    public static boolean isBorder(Point point) {
-        return point.x == 0
-            || point.x == SIZE - 1
-            || point.y == 0
-            || point.y == SIZE - 1;
-    }
+    public void createField() {
+        var ref = new Object() {
+            final List<Point> candidates = new ArrayList<>(points);
+            Point A = candidates.get(random.nextInt(candidates.size()));
+        };
+        ref.candidates.removeIf(Mesh::isBorder);
 
-    public void create() {
-        Point A;
-        Point B;
-
-        List<Point> candidates = new ArrayList<>(points);
-        candidates.addAll(points);
-        candidates.removeIf(Mesh::isBorder);
-        candidates.removeIf(point -> point.distance(new Point(SIZE/2,SIZE/2)) < 10);
-
-        A = candidates.get(random.nextInt(candidates.size()));
-
-        Point finalA = A;
-        candidates.removeIf(point -> point.distance(finalA) < 5);
-        for (int i = 0; i <= 10; i++) {
-            int index = random.nextInt(candidates.size());
-            B = candidates.get(index);
-            this.findPath(A,B);
-            A = B;
+        for (int i = 0; i < 10; i++) {
+            int index = random.nextInt(ref.candidates.size());
+            Point B = ref.candidates.get(index);
+            findPath(ref.A,B);
+            ref.A = B;
         }
     }
 
@@ -69,7 +52,7 @@ public class Mesh {
             List<Double> values = new ArrayList<>();
             HashMap<Double, Clone> map = new HashMap<>();
 
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000; i++) {
                 Clone clone = new Clone();
                 double heuristic = clone.getHeuristic(A,B);
                 map.put(heuristic,clone);
@@ -83,20 +66,31 @@ public class Mesh {
 
             Clone best_Clone = map.get(best_Heuristic);
 
-            A = best_Clone.parcial.get(0);
+            A = best_Clone.getPath().get(0);
             path.add(A);
         }
     }
 
+    public static boolean isBorder(Point point) {
+        return point.x == 0
+            || point.x == SIZE - 1
+            || point.y == 0
+            || point.y == SIZE - 1;
+    }
+
+    public List<Point> getPath() {
+        return path;
+    }
+
     @Override
     public String toString() {
-        String string = "";
+        String s = "";
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++)
                 if (field[i][j] == null) {
-                    string += " " + " ";
-                } else string += field[i][j] + " ";
-            string += "\n";
-        } return string;
+                    s += " " + " ";
+                } else s += field[i][j] + " ";
+            s += "\n";
+        } return s;
     }
 }

@@ -5,7 +5,8 @@ import java.awt.event.KeyEvent;
 public class Player {
     public int x,y;
     private int dx, dy;
-    public Image image;
+
+    private final Image image;
 
     public Player(int x, int y) {
         this.x = y * 20 + 2;
@@ -21,10 +22,10 @@ public class Player {
     public void keyPressed(KeyEvent keyEvent) {
         int key = keyEvent.getKeyCode();
         switch (key) {
-            case KeyEvent.VK_UP -> dy = -3;
-            case KeyEvent.VK_DOWN -> dy = 3;
-            case KeyEvent.VK_RIGHT -> dx = 3;
-            case KeyEvent.VK_LEFT -> dx = -3;
+            case KeyEvent.VK_UP -> dy = -2;
+            case KeyEvent.VK_DOWN -> dy = 2;
+            case KeyEvent.VK_RIGHT -> dx = 2;
+            case KeyEvent.VK_LEFT -> dx = -2;
         }
     }
 
@@ -34,5 +35,9 @@ public class Player {
             case KeyEvent.VK_UP, KeyEvent.VK_DOWN -> dy = 0;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT -> dx = 0;
         }
+    }
+
+    public Image getImage() {
+        return image;
     }
 }

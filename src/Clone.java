@@ -4,35 +4,29 @@ import java.util.List;
 import java.util.Random;
 
 public class Clone {
-
-    public final List<Point> parcial = new ArrayList<>();
+    private final List<Point> path = new ArrayList<>();
+    private final Random random = new Random();
 
     public double getHeuristic(Point A, Point B) {
         int energy = 10;
-
         while (!A.equals(B) && energy != 0) {
-            Point north = new Point(A.x-1, A.y);
-            Point south = new Point(A.x+1, A.y);
-            Point rigth = new Point(A.x, A.y-1);
-            Point left = new Point(A.x, A.y+1);
+            var north = new Point(A.x-1,A.y);
+            var south = new Point(A.x+1,A.y);
+            var left = new Point(A.x, A.y+1);
+            var rigth = new Point(A.x, A.y-1);
 
-            Random random = new Random();
-            List<Point> candidates = new ArrayList<>();
+            var candidates = new ArrayList<>(List.of(new Point[] {
+                    north, south, left, rigth
+            })); candidates.removeIf(Mesh::isBorder);
 
-            candidates.add(north);
-            candidates.add(south);
-            candidates.add(rigth);
-            candidates.add(left);
+            int index = random.nextInt(candidates.size());
+            A = candidates.get(index);
+            path.add(A);
+            energy--;
+        } return A.distance(B) / (energy + 1);
+    }
 
-            candidates.removeIf(Mesh::isBorder);
-
-            if (candidates.isEmpty()) break;
-            else {
-                int result = random.nextInt(candidates.size());
-                A = candidates.get(result);
-                parcial.add(A);
-            } energy--;
-        }
-        return A.distance(B) / (energy + 1);
+    public List<Point> getPath() {
+        return path;
     }
 }
