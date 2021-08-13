@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Random;
 
 public class Mesh {
-    public static int SIZE = 0;
     public final Integer[][] field;
 
+    private static int size = 0;
     private final List<Point> points = new ArrayList<>();
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
 
     public Mesh(int size) {
-        Mesh.SIZE = size;
+        Mesh.size = size;
         field = new Integer[size][size];
         mapField(size);
         createField();
@@ -33,17 +33,19 @@ public class Mesh {
     }
 
     public void createField() {
-        var ref = new Object() {
+        var obj = new Object() {
             final List<Point> candidates = new ArrayList<>(points);
-            Point A = candidates.get(random.nextInt(candidates.size()));
+            final int index = random.nextInt(candidates.size());
+            Point A = candidates.get(index);
         };
-        ref.candidates.removeIf(Mesh::isBorder);
+
+        obj.candidates.removeIf(Mesh::isBorder);
 
         for (int i = 0; i < 10; i++) {
-            int index = random.nextInt(ref.candidates.size());
-            Point B = ref.candidates.get(index);
-            findPath(ref.A,B);
-            ref.A = B;
+            int index = random.nextInt(obj.candidates.size());
+            Point B = obj.candidates.get(index);
+            findPath(obj.A,B);
+            obj.A = B;
         }
     }
 
@@ -73,9 +75,9 @@ public class Mesh {
 
     public static boolean isBorder(Point point) {
         return point.x == 0
-            || point.x == SIZE - 1
+            || point.x == size - 1
             || point.y == 0
-            || point.y == SIZE - 1;
+            || point.y == size - 1;
     }
 
     public List<Point> getPath() {
