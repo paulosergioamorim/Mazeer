@@ -89,9 +89,7 @@ public class Mesh {
         String s = "";
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++)
-                if (field[i][j] == null) {
-                    s += " " + " ";
-                } else s += field[i][j] + " ";
+                s += field[i][j] + " ";
             s += "\n";
         } return s;
     }
