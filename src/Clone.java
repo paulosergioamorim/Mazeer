@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Clone {
-    private final List<Point> path;
+    private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
 
-    private final int size;
     private Point first;
     private double heuristic;
 
@@ -15,10 +14,6 @@ public class Clone {
         return path;
     }
 
-    public Clone(int size) {
-        this.size = size;
-        path = new ArrayList<>();
-    }
 
     public void setHeuristic(Point A, Point B) {
         int energy = 15;

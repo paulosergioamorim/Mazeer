@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Mesh {
     public int[][] field;
@@ -8,6 +9,7 @@ public class Mesh {
 
     private final List<Point> points;
     private final List<Point> path;
+    private final Random random = new Random();
 
     /**
      * Create a field with size
@@ -20,7 +22,7 @@ public class Mesh {
         path = new ArrayList<>();
 
         this.mapField();
-        this.findPath(new Point(1,1), new Point(Mesh.size-2, Mesh.size-2));
+        this.createField();
         this.formatField();
     }
 
@@ -40,8 +42,23 @@ public class Mesh {
             }
     }
 
-    private void create() {
+    public void createField() {
+        var ref = new Object() {
+            final List<Point> candidates = new ArrayList<>(points);
+            final int index = random.nextInt(candidates.size());
+            Point A = candidates.get(index);
+        };
+        ref.candidates.removeIf(Mesh::isBorder);
+        ref.candidates.removeIf(point -> point.distance(
+                new Point(Mesh.size/2,Mesh.size/2)
+        ) < 5);
 
+        for (int i = 0; i < 15; i++) {
+            int index = random.nextInt(ref.candidates.size());
+            Point B = ref.candidates.get(index);
+            findPath(ref.A,B);
+            ref.A = B;
+        }
     }
 
     private void findPath(Point A, Point B) {
@@ -50,7 +67,7 @@ public class Mesh {
             List<Clone> clones = new ArrayList<>();
 
             for (int i = 0; i < 1000; i++) {
-                Clone clone = new Clone(size);
+                Clone clone = new Clone();
                 clone.setHeuristic(A,B);
                 clones.add(clone);
             }
@@ -127,14 +144,5 @@ public class Mesh {
      */
     public List<Point> getPoints() {
         return points;
-    }
-
-    public static void main(String[] args) {
-        Mesh mesh = new Mesh(20);
-        Point init = new Point(1,1);
-        Point end = new Point(Mesh.size-2,Mesh.size-2);
-        mesh.findPath(init,end);
-        mesh.formatField();
-        System.out.println(mesh);
     }
 }
