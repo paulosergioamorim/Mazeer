@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +15,7 @@ public class Clone {
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
 
-    /**
-     * Initiate Clone heuristic
-     * @param A initial point
-     * @param B final point
-     */
-    public Clone(Point A, Point B) {
-        this.setHeuristic(A,B);
-    }
-
-    public void setHeuristic(Point A, Point B) {
+    public void setHeuristic(@NotNull Point A, @NotNull Point B) {
         int energy = 15;
         while (!A.equals(B) && energy != 0) {
             Point up = new Point(A.x-1,A.y);
@@ -31,12 +24,8 @@ public class Clone {
             Point rigth = new Point(A.x, A.y+1);
 
             List<Point> candidates = new ArrayList<>(List.of(
-                    new Point[] {
-                            up, down, left, rigth
-                    })
-            );
-
-            candidates.removeIf(Mesh::isBorder);
+                    new Point[] { up, down, left, rigth })
+            ); candidates.removeIf(Mesh::isBorder);
 
             A = candidates.get(random.nextInt(candidates.size()));
             path.add(A);

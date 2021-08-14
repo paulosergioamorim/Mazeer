@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +8,6 @@ import java.util.Random;
 /**
  * @author Paulo Sergio
  */
-
 public class Mesh {
     public int[][] field;
 
@@ -28,12 +29,22 @@ public class Mesh {
         this.values();
     }
 
+    /**
+     * Set value for each point in mesh,
+     * if path contains point, value equals to 0,
+     * else, value is 1
+     * @see #path
+     */
     private void values() {
         points.forEach(
                 point -> field[point.x][point.y] = path.contains(point) ? 0: 1
         );
     }
 
+    /**
+     * Map each point in mesh to a list
+     * @see #field
+     */
     private void map() {
         for (int x = 0; x < field.length; x++)
             for (int y = 0; y < field[0].length; y++) {
@@ -42,6 +53,10 @@ public class Mesh {
             }
     }
 
+    /**
+     * Define mesh path
+     * @see #find(Point, Point)
+     */
     private void create() {
         List<Point> candidates = new ArrayList<>(points);
         candidates.removeIf(Mesh::isBorder);
@@ -58,8 +73,9 @@ public class Mesh {
      * Find a path from A to B
      * @param A initial point
      * @param B final point
+     * @see Clone#setHeuristic(Point, Point)
      */
-    private void find(Point A, Point B) {
+    private void find(@NotNull Point A, @NotNull Point B) {
         while (!A.equals(B)) {
             path.add(A);
             List<Clone> clones = new ArrayList<>();
@@ -69,7 +85,11 @@ public class Mesh {
             List<Clone> clones_left = new ArrayList<>();
             List<Clone> clones_rigth = new ArrayList<>();
 
-            for (int i = 0; i < 1000; i++) clones.add(new Clone(A, B));
+            for (int i = 0; i < 1000; i++) {
+                Clone clone = new Clone();
+                clone.setHeuristic(A,B);
+                clones.add(clone);
+            }
 
             for (Clone clone : clones) {
                 if (clone.getFirst().equals(new Point(A.x - 1, A.y))) clones_up.add(clone);
@@ -84,9 +104,7 @@ public class Mesh {
             double avarage_rigth = clones_rigth.stream().mapToDouble(Clone::getHeuristic).sum() / clones_rigth.size();
 
             List<Double> avarages = new ArrayList<>(List.of(
-                    new Double[] {
-                            avarage_up, avarage_down, avarage_left, avarage_rigth
-                    })
+                    new Double[] { avarage_up, avarage_down, avarage_left, avarage_rigth })
             ); avarages.sort(Double::compare);
 
             double best_avarage = avarages.get(0);
@@ -102,6 +120,7 @@ public class Mesh {
      * Verify if point is part of maze border
      * @param point input point
      * @return if point is part of border
+     * @see Mesh#field
      */
     public static boolean isBorder(Point point) {
         return (
@@ -114,8 +133,7 @@ public class Mesh {
 
     public List<Point> getPath() { return path; }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         String s = "";
         for (int x = 0; x < field.length; x++) {
             for (int y = 0; y < field[0].length; y++)
