@@ -7,10 +7,9 @@ public class Clone {
     private final List<Point> path;
     private final Random random = new Random();
 
-    private double heuristic;
-
     private final int size;
     private Point first;
+    private double heuristic;
 
     private List<Point> getPath() {
         return path;
@@ -21,13 +20,9 @@ public class Clone {
         path = new ArrayList<>();
     }
 
-    public double getHeuristic() {
-        return heuristic;
-    }
-
     public void setHeuristic(Point A, Point B) {
         int energy = 10;
-        while (A != B && energy != 0) {
+        while (!A.equals(B) && energy != 0) {
             int x = A.x;
             int y = A.y;
 
@@ -52,13 +47,16 @@ public class Clone {
 
             if (energy == 10)
                 first = A;
-
             energy--;
         }
-        heuristic = 1 / (A.distance(B) + 1);
+        heuristic = A.distance(B);
     }
 
     public Point getFirst() {
         return first;
+    }
+
+    public double getHeuristic() {
+        return heuristic;
     }
 }
