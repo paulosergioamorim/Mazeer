@@ -4,16 +4,10 @@ import java.util.List;
 import java.util.Random;
 
 public class Clone {
-    private final List<Point> path = new ArrayList<>();
-    private final Random random = new Random();
-
     private Point first;
     private double heuristic;
-
-    private List<Point> getPath() {
-        return path;
-    }
-
+    private final List<Point> path = new ArrayList<>();
+    private final Random random = new Random();
 
     public void setHeuristic(Point A, Point B) {
         int energy = 15;
@@ -26,12 +20,11 @@ public class Clone {
             Point left = new Point(x,y-1);
             Point rigth = new Point(x,y+1);
 
-            List<Point> candidates = new ArrayList<>();
-
-            candidates.add(up);
-            candidates.add(down);
-            candidates.add(left);
-            candidates.add(rigth);
+            List<Point> candidates = new ArrayList<>(List.of(
+                    new Point[] {
+                            up, down, left, rigth
+                    })
+            );
 
             candidates.removeIf(Mesh::isBorder);
 
@@ -40,8 +33,7 @@ public class Clone {
             A = candidates.get(index);
             path.add(A);
 
-            if (energy == 15)
-                first = A;
+            if (energy == 15) first = A;
             energy--;
         }
         heuristic = A.distance(B);

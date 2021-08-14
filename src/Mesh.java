@@ -43,27 +43,21 @@ public class Mesh {
     }
 
     public void createField() {
-        var ref = new Object() {
-            final List<Point> candidates = new ArrayList<>(points);
-            final int index = random.nextInt(candidates.size());
-            Point A = candidates.get(index);
-        };
-        ref.candidates.removeIf(Mesh::isBorder);
-        ref.candidates.removeIf(point -> point.distance(
-                new Point(Mesh.size/2,Mesh.size/2)
-        ) < 5);
+        List<Point> candidates = new ArrayList<>(points);
+        candidates.removeIf(Mesh::isBorder);
+        Point A = candidates.get(random.nextInt(candidates.size()));
 
         for (int i = 0; i < 15; i++) {
-            int index = random.nextInt(ref.candidates.size());
-            Point B = ref.candidates.get(index);
-            findPath(ref.A,B);
-            ref.A = B;
+            Point B = candidates.get(random.nextInt(candidates.size()));
+            findPath(A,B);
+            A = B;
         }
     }
 
     private void findPath(Point A, Point B) {
-        path.add(A);
         while (!A.equals(B)) {
+            path.add(A);
+
             List<Clone> clones = new ArrayList<>();
 
             for (int i = 0; i < 1000; i++) {
@@ -89,32 +83,29 @@ public class Mesh {
             double avarage_left = clones_left.stream().mapToDouble(Clone::getHeuristic).sum() / clones_left.size();
             double avarage_rigth = clones_rigth.stream().mapToDouble(Clone::getHeuristic).sum() / clones_rigth.size();
 
-            List<Double> avarages = new ArrayList<>(List.of(new Double[] {
-                    avarage_up, avarage_down, avarage_left, avarage_rigth
-            }));
+            List<Double> avarages = new ArrayList<>(List.of(
+                    new Double[] {
+                            avarage_up, avarage_down, avarage_left, avarage_rigth
+                    })
+            ); avarages.sort(Double::compare);
 
-            avarages.sort(Double::compare);
             double best_avarage = avarages.get(0);
 
             if (best_avarage == avarage_up) A = clones_up.get(0).getFirst();
             if (best_avarage == avarage_down) A = clones_down.get(0).getFirst();
             if (best_avarage == avarage_left) A = clones_left.get(0).getFirst();
             if (best_avarage == avarage_rigth) A = clones_rigth.get(0).getFirst();
-
-            path.add(A);
-        }
+        } path.add(A);
     }
 
     @Override
     public String toString() {
         String s = "";
         for (int x = 0; x < field.length; x++) {
-            for (int y = 0; y < field[0].length; y++) {
+            for (int y = 0; y < field[0].length; y++)
                 s += field[x][y] + " ";
-            }
             s += "\n";
-        }
-        return s;
+        } return s;
     }
     // public methods
     /**
@@ -130,19 +121,7 @@ public class Mesh {
         );
     }
 
-    // getters methods
+    public List<Point> getPath() { return path; }
 
-    /**
-     * @return path
-     */
-    public List<Point> getPath() {
-        return path;
-    }
-
-    /**
-     * @return all points
-     */
-    public List<Point> getPoints() {
-        return points;
-    }
+    public List<Point> getPoints() { return points; }
 }
