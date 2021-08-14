@@ -12,6 +12,7 @@ import java.util.Random;
 public class Clone {
     private Point first;
     private double heuristic;
+
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
 

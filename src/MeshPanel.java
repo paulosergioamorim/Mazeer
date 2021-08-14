@@ -1,18 +1,14 @@
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author Paulo Sergio
  */
-
 public class MeshPanel extends JPanel {
-    private final Mesh mesh;
+    private final Mesh mesh = new Mesh(30);
 
-    public MeshPanel() {
+    {
         this.setPreferredSize(new Dimension(600,600));
-        mesh = new Mesh(30);
     }
 
     @Override

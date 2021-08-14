@@ -14,7 +14,7 @@ public class Mesh {
     private final List<Point> points = new ArrayList<>();
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
-    private static int size = 0;
+    private static int size = 0; // this value is just to initialization
 
     /**
      * Create a field with size
@@ -23,7 +23,6 @@ public class Mesh {
     public Mesh(int size) {
         Mesh.size = size;
         field = new int[Mesh.size][Mesh.size];
-
         this.map();
         this.create();
         this.values();
@@ -123,12 +122,10 @@ public class Mesh {
      * @see Mesh#field
      */
     public static boolean isBorder(Point point) {
-        return (
-                point.x == 0
-             || point.x == size - 1
-             || point.y == 0
-             || point.y == size - 1
-        );
+        return point.x == 0
+            || point.x == size - 1
+            || point.y == 0
+            || point.y == size - 1;
     }
 
     public List<Point> getPath() { return path; }

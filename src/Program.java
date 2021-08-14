@@ -3,22 +3,24 @@ import javax.swing.*;
 /**
  * @author Paulo Sergio
  */
-
-
 public class Program extends JFrame {
 
-    private final MeshPanel meshPanel = new MeshPanel();
+    private final MeshPanel panel = new MeshPanel();
 
-    public Program() {
-        super("Mazeer");
+    /**
+     * Create a window
+     * @param title title of the window
+     */
+    public Program(String title) {
+        super(title);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setContentPane(meshPanel);
-        this.setVisible(true);
+        this.setContentPane(panel);
         this.setResizable(false);
         this.pack();
     }
 
     public static void main(String[] args) {
-        new Program();
+        JFrame frame = new Program("Mazeer");
+        frame.setVisible(true);
     }
 }
