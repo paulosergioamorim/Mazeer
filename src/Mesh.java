@@ -60,7 +60,8 @@ public class Mesh {
      * @param B final point
      */
     private void find(Point A, Point B) {
-        while (!A.equals(B)) { path.add(A);
+        while (!A.equals(B)) {
+            path.add(A);
             List<Clone> clones = new ArrayList<>();
 
             List<Clone> clones_up = new ArrayList<>();
