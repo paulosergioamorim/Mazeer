@@ -21,7 +21,7 @@ public class Clone {
     }
 
     public void setHeuristic(Point A, Point B) {
-        int energy = 100;
+        int energy = 15;
         while (!A.equals(B) && energy != 0) {
             int x = A.x;
             int y = A.y;
@@ -45,7 +45,7 @@ public class Clone {
             A = candidates.get(index);
             path.add(A);
 
-            if (energy == 10)
+            if (energy == 15)
                 first = A;
             energy--;
         }

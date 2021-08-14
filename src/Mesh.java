@@ -20,7 +20,7 @@ public class Mesh {
         path = new ArrayList<>();
 
         this.mapField();
-        this.findPath(new Point(1,1), new Point(Mesh.size-2,Mesh.size-2));
+        this.findPath(new Point(1,1), new Point(Mesh.size-2, Mesh.size-2));
         this.formatField();
     }
 
@@ -40,6 +40,10 @@ public class Mesh {
             }
     }
 
+    private void create() {
+
+    }
+
     private void findPath(Point A, Point B) {
         path.add(A);
         while (!A.equals(B)) {
@@ -51,30 +55,26 @@ public class Mesh {
                 clones.add(clone);
             }
 
-            var a = A;
-
             List<Clone> clones_up = new ArrayList<>();
             List<Clone> clones_down = new ArrayList<>();
             List<Clone> clones_left = new ArrayList<>();
             List<Clone> clones_rigth = new ArrayList<>();
 
-            clones.forEach(clone -> {
-                if (clone.getFirst().equals(new Point(a.x-1, a.y))) clones_up.add(clone);
-                if (clone.getFirst().equals(new Point(a.x+1, a.y))) clones_down.add(clone);
-                if (clone.getFirst().equals(new Point(a.x, a.y-1))) clones_left.add(clone);
-                if (clone.getFirst().equals(new Point(a.x, a.y+1))) clones_rigth.add(clone);
-            });
+            for (Clone clone : clones) {
+                if (clone.getFirst().equals(new Point(A.x - 1, A.y))) clones_up.add(clone);
+                if (clone.getFirst().equals(new Point(A.x + 1, A.y))) clones_down.add(clone);
+                if (clone.getFirst().equals(new Point(A.x, A.y - 1))) clones_left.add(clone);
+                if (clone.getFirst().equals(new Point(A.x, A.y + 1))) clones_rigth.add(clone);
+            }
 
             double avarage_up = clones_up.stream().mapToDouble(Clone::getHeuristic).sum() / clones_up.size();
             double avarage_down = clones_down.stream().mapToDouble(Clone::getHeuristic).sum() / clones_down.size();
             double avarage_left = clones_left.stream().mapToDouble(Clone::getHeuristic).sum() / clones_left.size();
             double avarage_rigth = clones_rigth.stream().mapToDouble(Clone::getHeuristic).sum() / clones_rigth.size();
 
-            List<Double> avarages = new ArrayList<>(
-                    List.of(new Double[] {
-                            avarage_up, avarage_down, avarage_left, avarage_rigth
-                    })
-            );
+            List<Double> avarages = new ArrayList<>(List.of(new Double[] {
+                    avarage_up, avarage_down, avarage_left, avarage_rigth
+            }));
 
             avarages.sort(Double::compare);
             double best_avarage = avarages.get(0);
