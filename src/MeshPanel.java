@@ -1,10 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Panel extends JPanel {
+/**
+ * @author Paulo Sergio
+ */
+
+public class MeshPanel extends JPanel {
     private final Mesh mesh;
 
-    public Panel() {
+    public MeshPanel() {
         this.setPreferredSize(new Dimension(600,600));
         mesh = new Mesh(30);
     }

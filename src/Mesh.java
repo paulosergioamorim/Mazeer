@@ -3,13 +3,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author Paulo Sergio
+ */
+
 public class Mesh {
     public int[][] field;
-    public static int size = 0;
 
-    private final List<Point> points;
-    private final List<Point> path;
+    private final List<Point> points = new ArrayList<>();
+    private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
+    private static int size = 0;
 
     /**
      * Create a field with size
@@ -18,23 +22,19 @@ public class Mesh {
     public Mesh(int size) {
         Mesh.size = size;
         field = new int[Mesh.size][Mesh.size];
-        points = new ArrayList<>();
-        path = new ArrayList<>();
 
-        this.mapField();
-        this.createField();
-        this.formatField();
+        this.map();
+        this.create();
+        this.values();
     }
 
-    // private methods
-
-    private void formatField() {
+    private void values() {
         points.forEach(
                 point -> field[point.x][point.y] = path.contains(point) ? 0: 1
         );
     }
 
-    private void mapField() {
+    private void map() {
         for (int x = 0; x < field.length; x++)
             for (int y = 0; y < field[0].length; y++) {
                 Point point = new Point(x,y);
@@ -42,34 +42,33 @@ public class Mesh {
             }
     }
 
-    public void createField() {
+    private void create() {
         List<Point> candidates = new ArrayList<>(points);
         candidates.removeIf(Mesh::isBorder);
         Point A = candidates.get(random.nextInt(candidates.size()));
 
         for (int i = 0; i < 15; i++) {
             Point B = candidates.get(random.nextInt(candidates.size()));
-            findPath(A,B);
+            find(A,B);
             A = B;
         }
     }
 
-    private void findPath(Point A, Point B) {
-        while (!A.equals(B)) {
-            path.add(A);
-
+    /**
+     * Find a path from A to B
+     * @param A initial point
+     * @param B final point
+     */
+    private void find(Point A, Point B) {
+        while (!A.equals(B)) { path.add(A);
             List<Clone> clones = new ArrayList<>();
-
-            for (int i = 0; i < 1000; i++) {
-                Clone clone = new Clone();
-                clone.setHeuristic(A,B);
-                clones.add(clone);
-            }
 
             List<Clone> clones_up = new ArrayList<>();
             List<Clone> clones_down = new ArrayList<>();
             List<Clone> clones_left = new ArrayList<>();
             List<Clone> clones_rigth = new ArrayList<>();
+
+            for (int i = 0; i < 1000; i++) clones.add(new Clone(A, B));
 
             for (Clone clone : clones) {
                 if (clone.getFirst().equals(new Point(A.x - 1, A.y))) clones_up.add(clone);
@@ -98,17 +97,8 @@ public class Mesh {
         } path.add(A);
     }
 
-    @Override
-    public String toString() {
-        String s = "";
-        for (int x = 0; x < field.length; x++) {
-            for (int y = 0; y < field[0].length; y++)
-                s += field[x][y] + " ";
-            s += "\n";
-        } return s;
-    }
-    // public methods
     /**
+     * Verify if point is part of maze border
      * @param point input point
      * @return if point is part of border
      */
@@ -123,5 +113,13 @@ public class Mesh {
 
     public List<Point> getPath() { return path; }
 
-    public List<Point> getPoints() { return points; }
+    @Override
+    public String toString() {
+        String s = "";
+        for (int x = 0; x < field.length; x++) {
+            for (int y = 0; y < field[0].length; y++)
+                s += field[x][y] + " ";
+            s += "\n";
+        } return s;
+    }
 }
