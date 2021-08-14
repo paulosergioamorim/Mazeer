@@ -21,7 +21,7 @@ public class Clone {
     }
 
     public void setHeuristic(Point A, Point B) {
-        int energy = 10;
+        int energy = 100;
         while (!A.equals(B) && energy != 0) {
             int x = A.x;
             int y = A.y;

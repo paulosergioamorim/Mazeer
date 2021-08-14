@@ -20,6 +20,8 @@ public class Mesh {
         path = new ArrayList<>();
 
         this.mapField();
+        this.findPath(new Point(1,1), new Point(Mesh.size-2,Mesh.size-2));
+        this.formatField();
     }
 
     // private methods
@@ -40,7 +42,7 @@ public class Mesh {
 
     private void findPath(Point A, Point B) {
         path.add(A);
-        do {
+        while (!A.equals(B)) {
             List<Clone> clones = new ArrayList<>();
 
             for (int i = 0; i < 1000; i++) {
@@ -82,9 +84,8 @@ public class Mesh {
             if (best_avarage == avarage_left) A = clones_left.get(0).getFirst();
             if (best_avarage == avarage_rigth) A = clones_rigth.get(0).getFirst();
 
-            System.out.printf("(%d,%d)\n",A.x,A.y);
             path.add(A);
-        } while (!A.equals(B));
+        }
     }
 
     @Override
