@@ -5,10 +5,10 @@ import java.awt.*;
  * @author Paulo Sergio
  */
 public class MeshPanel extends JPanel {
-    private final Mesh mesh = new Mesh(30);
+    private final Mesh mesh = new Mesh(50);
 
     {
-        this.setPreferredSize(new Dimension(600,600));
+        this.setPreferredSize(new Dimension(800,800));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class MeshPanel extends JPanel {
                 ) g.setColor(Color.CYAN);
                 else if (mesh.field[i][j] == 0) g.setColor(Color.WHITE);
                 else g.setColor(Color.BLACK);
-                g.fillRect(j*20,i*20,20,20);
+                g.fillRect(j*16,i*16,16,16);
             }
         }
     }

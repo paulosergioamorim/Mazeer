@@ -8,16 +8,24 @@ import java.util.Random;
 /**
  * @author Paulo Sergio
  */
-
 public class Clone {
     private Point first;
     private double heuristic;
 
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
+    private final Mesh mesh;
+
+    public Clone(Mesh mesh) {
+        this.mesh = mesh;
+    }
+
+    private int getRepeated() {
+        return (int) path.stream().filter(point -> mesh.getPath().contains(point)).count();
+    }
 
     public void setHeuristic(@NotNull Point A, @NotNull Point B) {
-        int energy = 15;
+        int energy = 100;
         while (!A.equals(B) && energy != 0) {
             Point up = new Point(A.x-1,A.y);
             Point down = new Point(A.x+1,A.y);
@@ -26,13 +34,14 @@ public class Clone {
 
             List<Point> candidates = new ArrayList<>(List.of(
                     new Point[] { up, down, left, rigth })
-            ); candidates.removeIf(Mesh::isBorder);
+            );
+            candidates.removeIf(mesh::isBorder);
 
             A = candidates.get(random.nextInt(candidates.size()));
             path.add(A);
 
-            if (energy == 15) first = A; energy--;
-        } heuristic = A.distance(B);
+            if (energy == 100) first = A; energy--;
+        } heuristic = A.distance(B) * Math.pow(getRepeated(),2) / (energy + 1);
     }
 
     public Point getFirst() {

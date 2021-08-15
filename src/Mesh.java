@@ -14,15 +14,15 @@ public class Mesh {
     private final List<Point> points = new ArrayList<>();
     private final List<Point> path = new ArrayList<>();
     private final Random random = new Random();
-    private static int size = 0; // this value is just to initialization
+    private final int size; // this value is just to initialization
 
     /**
      * Create a field with size
      * @param size is size of mesh
      */
     public Mesh(int size) {
-        Mesh.size = size;
-        field = new int[Mesh.size][Mesh.size];
+        this.size = size;
+        field = new int[size][size];
         this.map();
         this.create();
         this.values();
@@ -58,10 +58,13 @@ public class Mesh {
      */
     private void create() {
         List<Point> candidates = new ArrayList<>(points);
-        candidates.removeIf(Mesh::isBorder);
+        candidates.removeIf(this::isBorder);
         Point A = candidates.get(random.nextInt(candidates.size()));
+        Point finalA = A;
+        candidates.removeIf(point -> point.distance(finalA) < 20);
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Step " + (i + 1));
             Point B = candidates.get(random.nextInt(candidates.size()));
             find(A,B);
             A = B;
@@ -85,7 +88,7 @@ public class Mesh {
             List<Clone> clones_rigth = new ArrayList<>();
 
             for (int i = 0; i < 1000; i++) {
-                Clone clone = new Clone();
+                Clone clone = new Clone(this);
                 clone.setHeuristic(A,B);
                 clones.add(clone);
             }
@@ -121,7 +124,7 @@ public class Mesh {
      * @return if point is part of border
      * @see Mesh#field
      */
-    public static boolean isBorder(Point point) {
+    public boolean isBorder(Point point) {
         return point.x == 0
             || point.x == size - 1
             || point.y == 0
