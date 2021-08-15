@@ -35,8 +35,8 @@ public class Mesh {
      * @see #path
      */
     private void values() {
-        points.forEach(
-                point -> field[point.x][point.y] = path.contains(point) ? 0: 1
+        points.forEach(point ->
+                field[point.x][point.y] = path.contains(point) ? 0: 1
         );
     }
 
