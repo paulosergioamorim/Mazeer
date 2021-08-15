@@ -57,14 +57,14 @@ public class Mesh {
      * @see #find(Point, Point)
      */
     private void create() {
-        List<Point> candidates = new ArrayList<>(points);
+        List<Point> candidates = new ArrayList<>(this.points);
         candidates.removeIf(this::isBorder);
         Point A = candidates.get(random.nextInt(candidates.size()));
-        Point finalA = A;
-        candidates.removeIf(point -> point.distance(finalA) < 20);
 
         for (int i = 0; i < 3; i++) {
             System.out.println("Step " + (i + 1));
+            Point finalA = A;
+            candidates.removeIf(point -> point.distance(finalA) < 10);
             Point B = candidates.get(random.nextInt(candidates.size()));
             find(A,B);
             A = B;
