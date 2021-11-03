@@ -2,6 +2,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -57,17 +58,17 @@ public class Mesh {
      * @see #find(Point, Point)
      */
     private void create() {
-        List<Point> candidates = new ArrayList<>(this.points);
-        candidates.removeIf(this::isBorder);
-        Point A = candidates.get(random.nextInt(candidates.size()));
+        List<Point> points = new ArrayList<>(this.points);
+        points.removeIf(this::isBorder);
+        Point A = points.get(random.nextInt(points.size()));
 
-        for (int i = 0; i < 3; i++) {
-            System.out.println("Step " + (i + 1));
-            Point finalA = A;
-            candidates.removeIf(point -> point.distance(finalA) < 10);
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("Step " + i + " started");
+            List<Point> candidates = new ArrayList<>(points);
+            candidates.removeIf(point -> point.distance(A) < 15);
             Point B = candidates.get(random.nextInt(candidates.size()));
             find(A,B);
-            A = B;
+            System.out.println("Step " + i + " finished");
         }
     }
 
@@ -90,6 +91,7 @@ public class Mesh {
             for (int i = 0; i < 1000; i++) {
                 Clone clone = new Clone(this);
                 clone.setHeuristic(A,B);
+                clone.setFirst();
                 clones.add(clone);
             }
 
@@ -135,10 +137,8 @@ public class Mesh {
 
     @Override public String toString() {
         String s = "";
-        for (int x = 0; x < field.length; x++) {
-            for (int y = 0; y < field[0].length; y++)
-                s += field[x][y] + " ";
-            s += "\n";
-        } return s;
+        for (int[] row : field)
+            s += Arrays.toString(row) + "\n";
+        return s;
     }
 }

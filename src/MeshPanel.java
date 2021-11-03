@@ -5,7 +5,7 @@ import java.awt.*;
  * @author Paulo Sergio
  */
 public class MeshPanel extends JPanel {
-    private final int size = 50;
+    private final int size = 40;
     private final int length = 15;
     private final Mesh mesh = new Mesh(this.size);
 

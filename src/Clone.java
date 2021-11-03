@@ -20,13 +20,28 @@ public class Clone {
         this.mesh = mesh;
     }
 
-    private int getRepeated() {
-        return (int) path.stream().filter(point -> mesh.getPath().contains(point)).count();
+    private int repeated() {
+        return (int) path
+                .stream()
+                .filter(point -> mesh
+                        .getPath()
+                        .contains(point))
+                .count();
+    }
+
+    private double distanceToPath() {
+        double d = 0;
+        for (Point point : path) {
+            Point ref = mesh.getPath().get(mesh.getPath().size()-1);
+            d += point.distance(ref);
+        }
+        d /= path.size();
+        return d;
     }
 
     public void setHeuristic(@NotNull Point A, @NotNull Point B) {
         int energy = 100;
-        while (!A.equals(B) && energy != 0) {
+        while (!A.equals(B) && energy > 1) {
             Point up = new Point(A.x-1,A.y);
             Point down = new Point(A.x+1,A.y);
             Point left = new Point(A.x, A.y-1);
@@ -35,20 +50,22 @@ public class Clone {
             List<Point> candidates = new ArrayList<>(List.of(
                     new Point[] { up, down, left, rigth })
             );
+
             candidates.removeIf(mesh::isBorder);
 
             A = candidates.get(random.nextInt(candidates.size()));
             path.add(A);
+            energy--;
 
-            if (energy == 100) first = A; energy--;
-        } heuristic = A.distance(B) * Math.pow(getRepeated(),2) / (energy + 1);
+        } heuristic = A.distance(B)
+                * repeated()
+                * repeated();
+    // quanto menor a heuristica, melhor o clone
     }
 
-    public Point getFirst() {
-        return first;
-    }
+    public void setFirst() { first = path.get(0); }
 
-    public double getHeuristic() {
-        return heuristic;
-    }
+    public Point getFirst() { return first; }
+
+    public double getHeuristic() { return heuristic; }
 }
